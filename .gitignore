@@ -1,0 +1,7 @@
+tests/
+*.java
+*.py
+*.pyc
+*.c
+*.o
+*.exe
