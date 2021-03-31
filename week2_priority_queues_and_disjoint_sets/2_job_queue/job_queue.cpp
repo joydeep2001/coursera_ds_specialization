@@ -30,19 +30,10 @@ class JobQueue {
 
   void AssignJobs() {
     // TODO: replace this code with a faster algorithm.
-    assigned_workers_.resize(jobs_.size());
-    start_times_.resize(jobs_.size());
-    vector<long long> next_free_time(num_workers_, 0);
-    for (int i = 0; i < jobs_.size(); ++i) {
-      int duration = jobs_[i];
-      int next_worker = 0;
-      for (int j = 0; j < num_workers_; ++j) {
-        if (next_free_time[j] < next_free_time[next_worker])
-          next_worker = j;
-      }
-      assigned_workers_[i] = next_worker;
-      start_times_[i] = next_free_time[next_worker];
-      next_free_time[next_worker] += duration;
+
+    for(int i = 0;i < jobs_.size();i++)
+    {
+
     }
   }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include<cmath>
 
 using std::vector;
 using std::cin;
@@ -29,28 +30,46 @@ class HeapBuilder {
       cin >> data_[i];
   }
 
-  void GenerateSwaps() {
-    swaps_.clear();
-    // The following naive implementation just sorts 
-    // the given sequence using selection sort algorithm
-    // and saves the resulting sequence of swaps.
-    // This turns the given array into a heap, 
-    // but in the worst case gives a quadratic number of swaps.
-    //
-    // TODO: replace by a more efficient implementation
-    for (int i = 0; i < data_.size(); ++i)
-      for (int j = i + 1; j < data_.size(); ++j) {
-        if (data_[i] > data_[j]) {
-          swap(data_[i], data_[j]);
-          swaps_.push_back(make_pair(i, j));
-        }
-      }
+  void GenerateSwaps(int parent) {
+
+
+    int smallest;
+
+    smallest = parent;
+    int left = parent * 2 + 1;
+    int right = parent * 2 + 2;
+
+    if(right < data_.size() && data_[right] < data_[smallest])
+    {
+        smallest = right;
+    }
+
+    if(left < data_.size() && data_[left] < data_[smallest])
+    {
+        smallest = left;
+    }
+    //std::cout << smallest << std::endl;
+
+    if(smallest != parent)
+    {
+        std::swap(data_[parent], data_[smallest]);
+        swaps_.push_back(make_pair(parent, smallest));
+
+        GenerateSwaps(smallest);
+    }
+
+
+
   }
 
  public:
   void Solve() {
     ReadData();
-    GenerateSwaps();
+    int parent = data_.size() / 2 - 1;
+    swaps_.clear();
+    for(int i = parent;i >= 0;i--)
+        GenerateSwaps(i);
+
     WriteResponse();
   }
 };
