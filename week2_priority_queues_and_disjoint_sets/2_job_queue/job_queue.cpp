@@ -1,10 +1,9 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include<iostream>
+#include <bits/stdc++.h>
 
-using std::vector;
-using std::cin;
-using std::cout;
+using namespace std;
+
+typedef pair<long long, long long> pi;
 
 class JobQueue {
  private:
@@ -30,11 +29,44 @@ class JobQueue {
 
   void AssignJobs() {
     // TODO: replace this code with a faster algorithm.
+    long long cur_time = 0, job_count = 0;
 
-    for(int i = 0;i < jobs_.size();i++)
+    priority_queue<pi, vector<pi>, greater<pi> > pq;
+
+    for(int thread = 0;thread < num_workers_;thread++)
     {
 
+        long long temp = cur_time + jobs_[job_count++];
+
+        pq.push(make_pair(temp, thread));
+        assigned_workers_.push_back(thread);
+        start_times_.push_back(cur_time);
+
+
     }
+
+    while(!pq.empty())
+    {
+        //extract min
+        pi min_ = pq.top();
+        pq.pop();
+        //first -> time second->thread
+        if(cur_time < min_.first)
+            cur_time = min_.first;
+        if(job_count < jobs_.size())
+        {
+            long long temp = cur_time + jobs_[job_count++];
+            int thread = min_.second;
+            pq.push(make_pair(temp, thread));
+            assigned_workers_.push_back(thread);
+            start_times_.push_back(cur_time);
+        }
+
+
+    }
+
+
+
   }
 
  public:

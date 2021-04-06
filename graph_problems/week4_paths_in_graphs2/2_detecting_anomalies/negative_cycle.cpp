@@ -1,11 +1,41 @@
 #include <iostream>
 #include <vector>
 
+//#define INT_MAX 2147483647
+
+
+
 using std::vector;
 
 int negative_cycle(vector<vector<int> > &adj, vector<vector<int> > &cost) {
   //write your code here
-  return 0;
+  int size_ = adj.size();
+  int* min_cost = new int[size_];
+  bool change_flag;
+  for(register int i = 0;i < size_;i++)
+    min_cost[i] = INT_MAX;
+
+  min_cost[0] = 0;
+
+  for(register int i = 0;i < size_;i++)
+  {
+     // change_flag = false;
+      for(register int j = 0;j < adj[i].size();j++)
+      {
+          int cur_visit = adj[i][j];
+          //relaxation
+          if(min_cost[i] != INT_MAX && min_cost[cur_visit] > cost[i][j] + min_cost[i])
+          {
+              change_flag = true;
+              min_cost[cur_visit] = cost[i][j] + min_cost[i];
+          }
+
+      }
+
+  }
+
+
+  return 1;
 }
 
 int main() {

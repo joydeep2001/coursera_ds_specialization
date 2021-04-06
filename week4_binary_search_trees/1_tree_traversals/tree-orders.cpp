@@ -5,6 +5,7 @@
 #include <sys/resource.h>
 #endif
 
+
 using std::vector;
 using std::ios_base;
 using std::cin;
@@ -12,7 +13,7 @@ using std::cout;
 
 class TreeOrders {
   int n;
-  vector <int> key;
+  vector <long long> key;
   vector <int> left;
   vector <int> right;
 
@@ -27,33 +28,66 @@ public:
     }
   }
 
+  void in_order_searcher(int i, vector<long long>& result)
+  {
 
-  vector <int> in_order() {
-    vector<int> result;
+      if(i == -1)
+          return;
+
+      in_order_searcher(left[i], result);
+      result.push_back(key[i]);
+      in_order_searcher(right[i], result);
+
+
+  }
+  vector <long long> in_order() {
+    vector<long long> result;
     // Finish the implementation
     // You may need to add a new recursive method to do that
+    in_order_searcher(0, result);
 
     return result;
   }
+  void pre_order_searcher(int i, vector<long long>& result)
+  {
 
-  vector <int> pre_order() {
-    vector<int> result;    
+      if(i == -1)
+          return;
+      result.push_back(key[i]);
+      pre_order_searcher(left[i], result);
+      pre_order_searcher(right[i], result);
+
+
+  }
+  vector <long long> pre_order() {
+    vector<long long> result;
     // Finish the implementation
     // You may need to add a new recursive method to do that
-    
+    pre_order_searcher(0, result);
     return result;
   }
+  void post_order_searcher(int i, vector<long long>& result)
+  {
 
-  vector <int> post_order() {
-    vector<int> result;
+      if(i == -1)
+          return;
+
+      post_order_searcher(left[i], result);
+      post_order_searcher(right[i], result);
+      result.push_back(key[i]);
+
+
+  }
+  vector <long long> post_order() {
+    vector<long long> result;
     // Finish the implementation
     // You may need to add a new recursive method to do that
-    
+    post_order_searcher(0, result);
     return result;
   }
 };
 
-void print(vector <int> a) {
+void print(vector <long long> a) {
   for (size_t i = 0; i < a.size(); i++) {
     if (i > 0) {
       cout << ' ';
