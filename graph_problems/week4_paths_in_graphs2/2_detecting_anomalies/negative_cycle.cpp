@@ -1,41 +1,104 @@
 #include <iostream>
 #include <vector>
 
-//#define INT_MAX 2147483647
+#define INT_MAX 2147483647
 
 
 
-using std::vector;
+using namespace std;
+//helper
+template <typename T>
+    void print(T* min_cost, int size_)
+    {
+        for(int i = 0;i < size_;i++)
+            cout << min_cost[i] << " ";
+        cout << endl;
+    }
 
-int negative_cycle(vector<vector<int> > &adj, vector<vector<int> > &cost) {
+//real code
+void dfs(vector<vector<int> > &adj, vector<vector<int> > &cost,int source, int* min_cost, bool* update, bool* visited)
+{
+
+    visited[source] = true;
+
+    //cout << source << " ->";
+
+    for(int i = 0;i < adj[source].size();i++)
+    {
+        int temp = adj[source][i];
+
+
+        if(min_cost[temp] > min_cost[source] + cost[source][i])
+        {
+
+            min_cost[temp] = min_cost[source] + cost[source][i];
+            *update = true;
+
+            if(visited[temp])
+                return;
+
+            dfs(adj, cost, temp, min_cost, update, visited);
+
+        }
+
+    }
+
+}
+
+bool bellman_ford(vector<vector<int> > &adj, vector<vector<int> > &cost,int source)
+{
+    bool* visited = new bool[adj.size()];
+    int* min_cost = new int[adj.size()];
+    bool update;
+    for(int i = 0;i < adj.size();i++)
+    {
+
+        min_cost[i] = INT_MAX;
+    }
+
+    min_cost[source] = 0;
+
+
+    for(int i = 0;i < (adj.size() - 1);i++)
+    {
+
+        update = false;
+
+        for(int k = 0;k < adj.size();k++)
+            visited[k] = false;
+        //cout << "min_cost: ";
+        //print<int>(min_cost, adj.size());
+
+        dfs(adj, cost, source, min_cost, &update, visited);
+        //cout << endl;
+        if(!update)
+            break;
+    }
+    if(update)
+        dfs(adj, cost, source, min_cost, &update, visited);
+
+    return update;
+}
+
+bool negative_cycle(vector<vector<int> > &adj, vector<vector<int> > &cost) {
   //write your code here
-  int size_ = adj.size();
-  int* min_cost = new int[size_];
-  bool change_flag;
-  for(register int i = 0;i < size_;i++)
-    min_cost[i] = INT_MAX;
 
-  min_cost[0] = 0;
-
-  for(register int i = 0;i < size_;i++)
+  bool negetive_cycle_exists = false;
+  for(int i = 0;i < adj.size();i++)
   {
-     // change_flag = false;
-      for(register int j = 0;j < adj[i].size();j++)
+      for(int j = 0;j < adj[i].size();j++)
       {
-          int cur_visit = adj[i][j];
-          //relaxation
-          if(min_cost[i] != INT_MAX && min_cost[cur_visit] > cost[i][j] + min_cost[i])
-          {
-              change_flag = true;
-              min_cost[cur_visit] = cost[i][j] + min_cost[i];
-          }
 
+        if(cost[i][j] < 0)
+            negetive_cycle_exists = bellman_ford(adj, cost, i);
+
+            if(negetive_cycle_exists)
+                return true;
       }
-
   }
 
 
-  return 1;
+  return false;
 }
 
 int main() {
